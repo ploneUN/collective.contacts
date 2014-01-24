@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontcontacts">
+
+<body>
+
+<div metal:fill-slot="main">
+
+
+
+<style type="text/css" tal:condition="exists: portal/upfrontcontacts.css"
+    tal:content="structure string:<!-- @import url($portal_url/upfrontcontacts.css); -->">
+</style>
+
+    <div tal:replace="structure provider:plone.abovecontenttitle" />
+    <div tal:replace="structure provider:plone.abovecontentbody" />
+
+    <h1 tal:content="object_title" class="documentFirstHeading">
+        Title or id
+    </h1>
+
+    <metal:body_macro metal:define-macro="body">
+
+    <h3>Work</h3>
+
+    <dl class="contacts">
+        <dt>First Name</dt>
+        <dd tal:content="context/first_name"></dd>
+        <dt>Last Name</dt>
+        <dd tal:content="context/last_name"></dd>
+        <dt>Position</dt>
+        <dd tal:content="context/getPosition"></dd>
+        <dt>Organization</dt>
+        <dd><a
+            tal:attributes="href context/organization/absolute_url |
+            nothing"
+            tal:content="context/organization/title | nothing"></a></dd>
+        <dt>Address</dt>
+        <dd tal:content="context/address">Address</dd>
+        <dd tal:content="context/city"></dd>
+        <dd>
+            <metal:block
+                    use-macro="python:here.widget('state',mode='view')">Notes</metal:block>
+        </dd>
+        <dd tal:content="context/zip"></dd>
+        <dd>
+                    <metal:block
+                    use-macro="python:here.widget('country',mode='view')">Notes</metal:block>
+        </dd>
+
+        <dt>Phone</dt>
+        <dd tal:content="context/work_phone">+6014494855</dd>
+        <dt>Mobile Phone</dt>
+        <dd tal:content="context/work_mobile_phone">+6014494855</dd>
+        <dt>Email</dt>
+        <dd><a          tal:attributes="href
+                        string:mailto::${context/getWorkEmail}"
+                        tal:content="context/getWorkEmail"></a></dd>
+ 
+    </dl>
+
+    <h3>Notes</h3>
+    <metal:block
+                    use-macro="python:here.widget('text',mode='view')">Notes</metal:block>
+
+
+   </metal:body_macro>
+
+        <metal:footer_macro define-macro="footer">
+            <div metal:use-macro="here/document_relateditems/macros/relatedItems">
+                show related items if they exist
+            </div>
+    
+            <div tal:replace="structure provider:plone.belowcontentbody" />
+        </metal:footer_macro>
+
+    
+</div>
+</body>
+</html>

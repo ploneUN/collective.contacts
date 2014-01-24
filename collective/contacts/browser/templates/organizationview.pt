@@ -1,0 +1,109 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontcontacts">
+
+<body>
+
+<div metal:fill-slot="main">
+
+
+
+<style type="text/css" tal:condition="exists: portal/upfrontcontacts.css"
+    tal:content="structure string:<!-- @import url($portal_url/upfrontcontacts.css); -->">
+</style>
+
+    <div tal:replace="structure provider:plone.abovecontenttitle" />
+    <div tal:replace="structure provider:plone.abovecontentbody" />
+
+    <h1 tal:content="object_title" class="documentFirstHeading">
+        Title or id
+    </h1>
+
+<metal:body_macro metal:define-macro="body">
+
+    <dl class="contacts">
+        <dt>Address</dt>
+        <dd tal:content="context/address">Address</dd>
+        <dd tal:content="context/city"></dd>
+        <dd>
+            <metal:block
+                    use-macro="python:here.widget('state',mode='view')">Notes</metal:block>
+        </dd>
+        <dd tal:content="context/zip"></dd>
+        <dd>
+                    <metal:block
+                    use-macro="python:here.widget('country',mode='view')">Notes</metal:block>
+        </dd>
+
+        <dt>Phone</dt>
+        <dd tal:content="context/phone">+6014494855</dd>
+        <dt>Email</dt>
+        <dd tal:content="context/email">test@ilo.org</dd>
+        <dt>Sector</dt>
+        <dd tal:content="context/sector">Sector</dd>
+        <dt tal:on-error="none"
+            tal:condition="context/sub_sector">Sub Sector</dt>
+            <dd
+            tal:on-error="none"
+            tal:condition="context/sub_sector"
+            tal:content="context/sub_sector"></dd>
+    </dl>
+
+    <metal:block
+                    use-macro="python:here.widget('text',mode='view')">Notes</metal:block>
+
+
+    <h3>People</h3>
+    <!-- grab back references to organization -->
+
+    <div id="organisation_list"
+        tal:define="Batch python:modules['Products.CMFPlone'].Batch">
+
+        <table class="contacts">
+        <tal:batch define="people
+        python:context.getBRefs(relationship='person_organization')"
+            tal:repeat="batch_start python:range(0, len(people), 3)">
+             <tal:row tal:define="batch python:Batch(people, 3, batch_start)">
+             <tr class="top">
+                <td tal:repeat="person batch">
+                    <h1 tal:content="person/Title"></h1>
+                    <p tal:content="person/Description"></p>
+                    <!-- image field photo -->
+                    <p tal:content="person/getPosition | nothing"></p>
+                    <p tal:content="person/getDepartment | nothing"></p>
+                    <p><span class="label">O:</span> <span
+                        tal:content="person/getWorkPhone"></span></p>
+                    <p><span class="label">E:</span> <a
+                        tal:attributes="href
+                        string:mailto::${person/getWorkEmail}"
+                        tal:content="person/getWorkEmail"></a></p>
+                    <p></p>
+                    <p style="text-align: right;">
+                    <a tal:attributes="href person/absolute_url"
+                        tal:content="string: Details">
+                    </a>
+                    <p>
+                    </td>
+           </tr>
+            </tal:row>
+            </tal:batch>
+        </table>
+   </div>
+    <!-- create table -->
+    <!-- batch rows -->
+
+   </metal:body_macro>
+
+        <metal:footer_macro define-macro="footer">
+            <div metal:use-macro="here/document_relateditems/macros/relatedItems">
+                show related items if they exist
+            </div>
+    
+            <div tal:replace="structure provider:plone.belowcontentbody" />
+        </metal:footer_macro>
+
+    
+</div>
+</body>
+</html>
